@@ -24,28 +24,31 @@ void fast_io() {
     cin.tie(0);
     cout.tie(0);
 }
-int main(){
+
+int main() {
     fast_io();
     int t;
-    cin>>t;
-    while(t--){
-        int n,q;
-        cin>>n>>q;
-        vector<int>a(n);
-        int sum=0;
-        for(int i=0;i<n;i++){
-            cin>>a[i];
-            sum+=a[i];
+    cin >> t;
+    while (t--) {
+        int n, q;
+        cin >> n >> q;
+        vector<int> a(n);
+        long long sum = 0;
+        for (int i = 0; i < n; i++) {
+            cin >> a[i];
+            sum += a[i];
         }
-        vector<int>prefix(n);
-        for(int i=1;i<=n;i++){
-            prefix[i]=prefix[i-1]+a[i-1];
+
+        vector<long long> prefix(n+1, 0);
+        for (int i = 1; i <= n; i++) {
+            prefix[i] = prefix[i-1] + a[i-1];
         }
-        for(int i=0;i<q;i++){
-            int l,r,k;
-            cin>>l>>r>>k;
-            int ts=sum-(prefix[r]-prefix[l-1])+(r-l+1)*k;
-            if(ts%2) yes;
+
+        while (q--) {
+            int l, r, k;
+            cin >> l >> r >> k;
+            long long ts = sum - (prefix[r] - prefix[l-1]) + 1LL*(r-l+1)*k;
+            if (ts % 2) yes;
             else no;
         }
     }
