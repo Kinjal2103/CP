@@ -31,15 +31,22 @@ int main(){
     while(t--){
         int n;
         cin>>n;
-        vi a(n);
+        vll a(n);
         fori(i,0,n){
             cin>>a[i];
         }
-        int k=0;
-        for(int i=0;i<n;i++){
-            if(a[i]%2) k++;
+        ll ans=0;
+        for(int i=1;i<=60;i++){
+            set<ll> s;
+            ll d= 1LL<<i;
+            for(int j=0;j<n;j++){
+                s.insert(a[j]%d);
+            }
+            if(s.size()==2){
+                ans=d;
+                break;
+            }
         }
-        if(k && k<n) cout<<2<<endl;
-        else if(k==0) cout<<3
+        cout<<ans<<endl;
     }
 }
