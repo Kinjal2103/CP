@@ -1,39 +1,52 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-int main() {
-	int t;
-	cin >> t; // Read the number of test cases
+#define ll long long
 
-	while (t--) {
-		int n;
-		cin >> n; // Read the length of array a
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-		// Calculate the size of array b, which is n * (n - 1) / 2
-		int m = (n * (n - 1)) / 2;
+    int t; cin >> t;
 
-		vector<int> v(m); // Declare vector v to store array b
-		for (int i = 0; i < m; i++)
-			cin >> v[i]; // Read the elements of array b
+    while(t--){
+        int n; cin >> n;
+        vector<ll> a(n);
 
-		sort(v.begin(), v.end()); // Sort the array b
+        for(int i=0;i<n;i++) cin >> a[i];
 
-		int x = n - 1, i = 0; // Initialize x to n-1 and i to 0
+        // ignore b
+        for(int i=0;i<n;i++){
+            int x; cin >> x;
+        }
 
-		// Loop to reconstruct array a from sorted array b
-		while (x > 0) {
-			cout << v[i] << " "; // Output the current element of array a
+        // all same → 0
+        bool same = true;
+        for(int i=1;i<n;i++){
+            if(a[i] != a[0]) same = false;
+        }
+        if(same){
+            cout << 0 << "\n";
+            continue;
+        }
 
-			i += x; // Move to the next element in sorted array b
-			x--; // Decrease x to move to the next group of elements
-		}
+        int ans = 0;
 
-		cout << "1000000000\n"; // Output a large number to complete array a
-	}
+        for(int i=0;i<n;i++){
+            if(i == 0){
+                if(__gcd(a[0], a[1]) != a[0]) ans++;
+            }
+            else if(i == n-1){
+                if(__gcd(a[n-2], a[n-1]) != a[n-1]) ans++;
+            }
+            else{
+                ll g1 = __gcd(a[i-1], a[i]);
+                ll g2 = __gcd(a[i], a[i+1]);
 
-	return 0;
+                if(g1 == g2) ans++;
+            }
+        }
+
+        cout << ans << "\n";
+    }
 }
-
-// Time Complexity (TC): O(m log m)
-// Space Complexity (SC): O(m)
