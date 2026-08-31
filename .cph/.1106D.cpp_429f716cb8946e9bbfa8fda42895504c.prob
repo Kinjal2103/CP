@@ -1,0 +1,1 @@
+{"name":"Local: 1106D","url":"c:\\Users\\kinja\\Desktop\\CSE\\CP\\1106D.cpp","tests":[{"id":1787834070374,"input":"3 2\n1 2\n1 3","output":"1 2 3 "},{"id":1787834079897,"input":"5 5\n1 4\n3 4\n5 4\n3 2\n1 5","output":"1 4 3 2 5 "}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\kinja\\Desktop\\CSE\\CP\\1106D.cpp","group":"local","local":true}

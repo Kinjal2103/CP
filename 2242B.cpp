@@ -1,4 +1,4 @@
-//https://codeforces.com/problemset/problem/2246/C
+//https://codeforces.com/problemset/problem/2242/B
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -64,8 +64,8 @@ const ll Mod=998244353;
 ll power(ll a, ll b){
     ll ans = 1;
     while(b){
-        if(b&1) ans=ans*a%MOD;
-        a=a*a%MOD;
+        if(b&1) ans=ans*a%Mod;
+        a=a*a%Mod;
         b/=2;
     }
     return ans;
@@ -83,31 +83,37 @@ int main(){
     while(t--){
         int n;
         cin>>n;
-        unordered_map<int,int>mp;
-        int neg=0;
-        for(int i=0;i<n;i++){
-            int x;
-            cin>>x;
-            if(x==-1){
-                neg++;
+        vi a(n);
+        fori(i,0,n) cin>>a[i];
+
+        vll pref1(n+1),pref3(n+1);
+        for(int i=1;i<=n;i++){
+            if(a[i-1]==1){
+                pref1[i]=pref1[i-1]+1;
             }else{
-                mp[x]++;
+                pref1[i]=pref1[i-1]-1;
+            }
+
+            if(a[i-1]==3){
+                pref3[i]=pref3[i-1]+1;
+            }else{
+                pref3[i]=pref3[i-1]-1;
             }
         }
 
-        ll even=1;
-        int p=0;
-        for(auto &[val,freq]:mp){
-            even=(even* power(2,freq-1))%MOD;
-            if(mp.count(val-1)) p++;
+        vll suff(n+2,INT_MAX);
+        for(int i=n-1;i>=1;i--){
+            suff[i]=min(suff[i+1],pref3[i]);
         }
-        ll ans=0;
-        ll negWays= power(2,neg-1) ;
-        if(negWays>1) ans=(negWays*p)%MOD;
-        ll ans=(ans+negWays)%MOD;
-        ans=(ans*p)%MOD;
-
-        cout<<ans<<endl;
+        int poss=0;
+        for(int i=1;i<n-1;i++){
+            if(pref1[i]>=0 && suff[i+1]-pref3[i]<=0){
+                poss=1;
+                break;
+            }
+        }
+        if(poss) yes;
+        else no;
     }   
     
 }

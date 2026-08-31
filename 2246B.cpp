@@ -1,4 +1,4 @@
-//https://codeforces.com/problemset/problem/2246/C
+//https://codeforces.com/problemset/problem/2246/B
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -64,8 +64,8 @@ const ll Mod=998244353;
 ll power(ll a, ll b){
     ll ans = 1;
     while(b){
-        if(b&1) ans=ans*a%MOD;
-        a=a*a%MOD;
+        if(b&1) ans=ans*a%Mod;
+        a=a*a%Mod;
         b/=2;
     }
     return ans;
@@ -83,31 +83,17 @@ int main(){
     while(t--){
         int n;
         cin>>n;
-        unordered_map<int,int>mp;
-        int neg=0;
-        for(int i=0;i<n;i++){
-            int x;
-            cin>>x;
-            if(x==-1){
-                neg++;
-            }else{
-                mp[x]++;
+        if(n==1) cout<<1<<endl;
+        else if(n==2) cout<<-1<<endl;
+        else{
+            ll curr=6;
+            cout<<"1 2 3 ";
+            for(int i=3;i<n;i++){
+                cout<<curr<<" ";
+                curr+=curr;
             }
+            cout<<endl;
         }
-
-        ll even=1;
-        int p=0;
-        for(auto &[val,freq]:mp){
-            even=(even* power(2,freq-1))%MOD;
-            if(mp.count(val-1)) p++;
-        }
-        ll ans=0;
-        ll negWays= power(2,neg-1) ;
-        if(negWays>1) ans=(negWays*p)%MOD;
-        ll ans=(ans+negWays)%MOD;
-        ans=(ans*p)%MOD;
-
-        cout<<ans<<endl;
     }   
     
 }

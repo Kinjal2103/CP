@@ -1,4 +1,4 @@
-//https://codeforces.com/problemset/problem/2246/C
+//https://codeforces.com/problemset/problem/2242/D
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -64,8 +64,8 @@ const ll Mod=998244353;
 ll power(ll a, ll b){
     ll ans = 1;
     while(b){
-        if(b&1) ans=ans*a%MOD;
-        a=a*a%MOD;
+        if(b&1) ans=ans*a%Mod;
+        a=a*a%Mod;
         b/=2;
     }
     return ans;
@@ -81,33 +81,40 @@ int main(){
     int t;
     cin>>t;
     while(t--){
-        int n;
-        cin>>n;
-        unordered_map<int,int>mp;
-        int neg=0;
-        for(int i=0;i<n;i++){
-            int x;
-            cin>>x;
-            if(x==-1){
-                neg++;
-            }else{
-                mp[x]++;
+        string a,b;
+        cin>>a>>b;
+
+        if(a==b) {
+            cout<<a.size()<<endl;
+            continue;
+        }
+        int n=a.size(),m=b.size();
+        vi prefA(n+1),prefB(m+1);
+        for(int i=1;i<=n;i++){
+            prefA[i]=(prefA[i-1]+(a[i-1]-'0'))%10;
+        }
+
+        for(int i=1;i<=m;i++){
+            prefB[i]=(prefB[i-1]+(b[i-1]-'0'))%10;
+        }
+
+        if(prefA[n]!=prefB[m]){
+            cout<<-1<<endl;
+            continue;
+        }
+
+        vector<vector<int>>dp(n+1,vector<int>(m+1,0));
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=m;j++){
+                if(prefA[i]==prefB[j]){
+                    dp[i][j]=dp[i-1][j-1]+1;
+                }else{
+                    dp[i][j]=max(dp[i-1][j],dp[i][j-1]);
+                }
             }
         }
+        cout<<dp[n][m]<<endl;
 
-        ll even=1;
-        int p=0;
-        for(auto &[val,freq]:mp){
-            even=(even* power(2,freq-1))%MOD;
-            if(mp.count(val-1)) p++;
-        }
-        ll ans=0;
-        ll negWays= power(2,neg-1) ;
-        if(negWays>1) ans=(negWays*p)%MOD;
-        ll ans=(ans+negWays)%MOD;
-        ans=(ans*p)%MOD;
-
-        cout<<ans<<endl;
     }   
     
 }

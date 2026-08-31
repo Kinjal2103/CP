@@ -1,4 +1,4 @@
-//https://codeforces.com/problemset/problem/2246/C
+//https://codeforces.com/problemset/problem/2242/C
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -64,8 +64,8 @@ const ll Mod=998244353;
 ll power(ll a, ll b){
     ll ans = 1;
     while(b){
-        if(b&1) ans=ans*a%MOD;
-        a=a*a%MOD;
+        if(b&1) ans=ans*a%Mod;
+        a=a*a%Mod;
         b/=2;
     }
     return ans;
@@ -81,33 +81,49 @@ int main(){
     int t;
     cin>>t;
     while(t--){
-        int n;
-        cin>>n;
-        unordered_map<int,int>mp;
-        int neg=0;
-        for(int i=0;i<n;i++){
-            int x;
-            cin>>x;
-            if(x==-1){
-                neg++;
-            }else{
-                mp[x]++;
+        int n,k;
+        cin>>n>>k;
+        vi a(n);
+        fori(i,0,n) cin>>a[i];
+
+        vll counts;
+        ll curr=1;
+        for(int i=1;i<n;i++){
+            if(a[i-1]==a[i]) curr++;
+            else{
+                counts.pb(curr);
+                curr=1; 
             }
         }
+        counts.pb(curr);
+        sort(all(counts));
 
-        ll even=1;
-        int p=0;
-        for(auto &[val,freq]:mp){
-            even=(even* power(2,freq-1))%MOD;
-            if(mp.count(val-1)) p++;
+        vll v=counts;
+        v.erase(unique(v.begin(),v.end()),v.end());
+        v.insert(v.begin(),0);
+        int m=counts.size();
+        int currLen=n;
+        int ans=0;
+        int idx=0;
+
+        for(int i=0;i<v.size()-1;i++){
+            int curr=v[i];
+            int next=v[i+1];
+            while(idx<counts.size() && counts[idx]<=curr){
+                currLen-=counts[idx];
+                m--;
+                idx++;
+            }
+            if(m>0){
+                int diff=k-currLen;
+                if(diff%m==0){
+                    int x=diff/m;
+                    if(x+next>0) ans++;
+                }
+            }
         }
-        ll ans=0;
-        ll negWays= power(2,neg-1) ;
-        if(negWays>1) ans=(negWays*p)%MOD;
-        ll ans=(ans+negWays)%MOD;
-        ans=(ans*p)%MOD;
-
         cout<<ans<<endl;
+
     }   
     
 }

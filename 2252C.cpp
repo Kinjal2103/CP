@@ -1,4 +1,4 @@
-//https://codeforces.com/problemset/problem/2246/C
+//https://codeforces.com/contest/2252/problem/C
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -61,11 +61,21 @@ struct TrieNode{
 
 #include <iomanip>
 const ll Mod=998244353;
+
+int getBits(ll x){
+    int b=0;
+    while(x){
+        b++;
+        x/=2;
+    }
+    return b;
+}
+
 ll power(ll a, ll b){
     ll ans = 1;
     while(b){
-        if(b&1) ans=ans*a%MOD;
-        a=a*a%MOD;
+        if(b&1) ans=ans*a%Mod;
+        a=a*a%Mod;
         b/=2;
     }
     return ans;
@@ -78,36 +88,50 @@ void fast_io() {
 
 int main(){
     fast_io();
+      
     int t;
     cin>>t;
     while(t--){
-        int n;
-        cin>>n;
-        unordered_map<int,int>mp;
-        int neg=0;
+        int n,m;
+        cin>>n>>m;
+        vi a(n);
+        for(int i=0;i<n;i++) cin>>a[i];
+
+        vvi grid(n,vector<int>(m));
         for(int i=0;i<n;i++){
-            int x;
-            cin>>x;
-            if(x==-1){
-                neg++;
-            }else{
-                mp[x]++;
+            for(int j=0;j<m;j++){
+                cin>>grid[i][j];
             }
         }
 
-        ll even=1;
-        int p=0;
-        for(auto &[val,freq]:mp){
-            even=(even* power(2,freq-1))%MOD;
-            if(mp.count(val-1)) p++;
+        int ans=m;
+        priority_queue<ll,vll,greater<ll>>pq;
+        //int sum=0;
+
+        for(int i=n-1;i>=0;i--){
+            for(int j=0;j<m;j++){
+                pq.push(grid[i][j]);
+                if(pq.size()>m) pq.pop();
+            }
+            
+            auto temp=pq;
+            vll v;
+            while(!temp.empty()){
+                v.push_back(temp.top());
+                temp.pop();
+            }
+
+            reverse(all(v));
+            ll sum=0;
+            for(int j=0;j<v.size();j++){
+                sum+=v[j];
+                if(sum>=a[i]){
+                    ans=min(ans,j+1);
+                }
+            }
+
         }
-        ll ans=0;
-        ll negWays= power(2,neg-1) ;
-        if(negWays>1) ans=(negWays*p)%MOD;
-        ll ans=(ans+negWays)%MOD;
-        ans=(ans*p)%MOD;
 
         cout<<ans<<endl;
-    }   
-    
+    }
 }

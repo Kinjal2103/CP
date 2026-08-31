@@ -1,4 +1,4 @@
-//https://codeforces.com/problemset/problem/2246/C
+//https://codeforces.com/contest/115/problem/A
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -61,11 +61,21 @@ struct TrieNode{
 
 #include <iomanip>
 const ll Mod=998244353;
+
+int getBits(ll x){
+    int b=0;
+    while(x){
+        b++;
+        x/=2;
+    }
+    return b;
+}
+
 ll power(ll a, ll b){
     ll ans = 1;
     while(b){
-        if(b&1) ans=ans*a%MOD;
-        a=a*a%MOD;
+        if(b&1) ans=ans*a%Mod;
+        a=a*a%Mod;
         b/=2;
     }
     return ans;
@@ -75,39 +85,30 @@ void fast_io() {
     cin.tie(0);
     cout.tie(0);
 }
-
+vi a,dp;
+int depth(int i){
+    if(a[i]==-1){
+        return 1;
+    }
+    if(dp[i]!=-1){
+        return dp[i];
+    }
+    return dp[i]=1+depth(a[i]);
+}
 int main(){
     fast_io();
-    int t;
-    cin>>t;
-    while(t--){
-        int n;
-        cin>>n;
-        unordered_map<int,int>mp;
-        int neg=0;
-        for(int i=0;i<n;i++){
-            int x;
-            cin>>x;
-            if(x==-1){
-                neg++;
-            }else{
-                mp[x]++;
-            }
-        }
-
-        ll even=1;
-        int p=0;
-        for(auto &[val,freq]:mp){
-            even=(even* power(2,freq-1))%MOD;
-            if(mp.count(val-1)) p++;
-        }
-        ll ans=0;
-        ll negWays= power(2,neg-1) ;
-        if(negWays>1) ans=(negWays*p)%MOD;
-        ll ans=(ans+negWays)%MOD;
-        ans=(ans*p)%MOD;
-
-        cout<<ans<<endl;
-    }   
-    
+      
+    int n;
+    cin>>n;
+    dp.resize(n,-1);
+    a.resize(n);
+    for(int i=0;i<n;i++){
+        cin>>a[i];
+        if(a[i]!=-1) a[i]--;
+    }
+    int ans=0;
+    for(int i=0;i<n;i++){
+        ans=max(ans,depth(i));
+    }
+    cout<<ans<<endl;
 }

@@ -1,4 +1,4 @@
-//https://codeforces.com/problemset/problem/2246/C
+//https://codeforces.com/problemset/problem/2245/C
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -61,11 +61,22 @@ struct TrieNode{
 
 #include <iomanip>
 const ll Mod=998244353;
+
+int getBits(ll x){
+    int b=0;
+    while(x){
+        b++;
+        x/=2;
+    }
+    return b;
+}
+
+
 ll power(ll a, ll b){
     ll ans = 1;
     while(b){
-        if(b&1) ans=ans*a%MOD;
-        a=a*a%MOD;
+        if(b&1) ans=ans*a%Mod;
+        a=a*a%Mod;
         b/=2;
     }
     return ans;
@@ -81,33 +92,62 @@ int main(){
     int t;
     cin>>t;
     while(t--){
-        int n;
-        cin>>n;
-        unordered_map<int,int>mp;
-        int neg=0;
-        for(int i=0;i<n;i++){
-            int x;
-            cin>>x;
-            if(x==-1){
-                neg++;
+        ll n,k;
+        cin>>n>>k;
+
+        if(n==1){
+            if(k==1){
+                yes;
+                cout<<0<<endl;
             }else{
-                mp[x]++;
+                no;
+            }
+            continue;
+        }
+
+        ll req=k^n;
+        
+        if(req>=(1LL<<getBits(n-1))){
+            no;
+            continue;
+        }
+        
+        vll ans(n);
+        vi used(n);
+
+        vll mex(n-1);
+        if(req<=n-1){
+            mex[n-2]=req;
+        }else{
+            mex[n-3]=req^(n-1);
+            mex[n-2]=n-1;
+        }
+
+        ans[n-1]=mex[n-2];
+        used[ans[n-1]]=1;
+
+        int curr=n-1;
+        for(int i=n-2;i>=1;i--){
+            if(mex[i-1]<mex[i]){
+                ans[i]=mex[i-1];
+                used[ans[i]]=1;
+            }
+            else{
+                while(curr>=0 && used[curr]){
+                    curr--;
+                }
+                ans[i]=curr;
+                used[curr]=1;
             }
         }
 
-        ll even=1;
-        int p=0;
-        for(auto &[val,freq]:mp){
-            even=(even* power(2,freq-1))%MOD;
-            if(mp.count(val-1)) p++;
+        while(curr>=0 && used[curr]){
+            curr--;
         }
-        ll ans=0;
-        ll negWays= power(2,neg-1) ;
-        if(negWays>1) ans=(negWays*p)%MOD;
-        ll ans=(ans+negWays)%MOD;
-        ans=(ans*p)%MOD;
-
-        cout<<ans<<endl;
+        ans[0]=curr;
+        yes;
+        for(int x:ans) cout<<x<<" ";
+        cout<<endl;
     }   
     
 }

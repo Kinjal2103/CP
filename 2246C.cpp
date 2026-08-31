@@ -102,10 +102,10 @@ int main(){
             if(mp.count(val-1)) p++;
         }
         ll ans=0;
-        ll negWays= power(2,neg-1) ;
-        if(negWays>1) ans=(negWays*p)%MOD;
-        ll ans=(ans+negWays)%MOD;
-        ans=(ans*p)%MOD;
+        ll negOdd= (neg>0) ?power(2,neg-1):0 ;
+        ll negEven=(neg>0) ?power(2,neg-1):1;
+        ans=(negEven+(negOdd*p)%MOD)%MOD;
+        ans=(ans*even)%MOD;
 
         cout<<ans<<endl;
     }   

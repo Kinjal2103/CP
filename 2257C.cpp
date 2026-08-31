@@ -1,4 +1,4 @@
-//https://codeforces.com/problemset/problem/2246/C
+//https://codeforces.com/contest/2257/problem/C
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -61,11 +61,21 @@ struct TrieNode{
 
 #include <iomanip>
 const ll Mod=998244353;
+
+int getBits(ll x){
+    int b=0;
+    while(x){
+        b++;
+        x/=2;
+    }
+    return b;
+}
+
 ll power(ll a, ll b){
     ll ans = 1;
     while(b){
-        if(b&1) ans=ans*a%MOD;
-        a=a*a%MOD;
+        if(b&1) ans=ans*a%Mod;
+        a=a*a%Mod;
         b/=2;
     }
     return ans;
@@ -76,38 +86,66 @@ void fast_io() {
     cout.tie(0);
 }
 
+vvi adj;
+vi dam;
+vi cameras;
+bool dfs(int u){
+    bool ok=dam[u];
+    vector<int>v;
+
+    for(int x:adj[u]){
+        if(dfs(x)){
+            v.push_back(x);
+            ok=true;
+        }
+    }
+
+    if(dam[u]){
+        for(int x:v){
+            cameras.pb(x);
+        }
+    }
+    
+    else if(v.size()>1){
+        for(int i=1;i<v.size();i++){
+            cameras.pb(v[i]);
+        }
+    }
+    
+    return ok;
+}
 int main(){
     fast_io();
+      
     int t;
     cin>>t;
     while(t--){
         int n;
         cin>>n;
-        unordered_map<int,int>mp;
-        int neg=0;
-        for(int i=0;i<n;i++){
-            int x;
-            cin>>x;
-            if(x==-1){
-                neg++;
-            }else{
-                mp[x]++;
-            }
+
+        adj.assign(n+1,{});
+        dam.assign(n+1,0);
+        cameras.clear();
+        for(int i=2;i<=n;i++){
+            int p;
+            cin>>p;
+            adj[p].push_back(i);
         }
 
-        ll even=1;
-        int p=0;
-        for(auto &[val,freq]:mp){
-            even=(even* power(2,freq-1))%MOD;
-            if(mp.count(val-1)) p++;
+        int m;
+        cin>>m;
+        for(int i=0;i<m;i++){
+            int a;
+            cin>>a;
+            dam[a]=true;
         }
-        ll ans=0;
-        ll negWays= power(2,neg-1) ;
-        if(negWays>1) ans=(negWays*p)%MOD;
-        ll ans=(ans+negWays)%MOD;
-        ans=(ans*p)%MOD;
 
-        cout<<ans<<endl;
-    }   
-    
+        dfs(1);
+
+        cout<<cameras.size()<<" ";
+        for(int x:cameras){
+            cout<<x<<" ";
+        }
+        cout<<endl;
+    }
 }

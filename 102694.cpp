@@ -1,4 +1,4 @@
-//https://codeforces.com/problemset/problem/2246/C
+//https://codeforces.com/gym/102694/problem/A
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -61,11 +61,22 @@ struct TrieNode{
 
 #include <iomanip>
 const ll Mod=998244353;
+
+int getBits(ll x){
+    int b=0;
+    while(x){
+        b++;
+        x/=2;
+    }
+    return b;
+}
+
+
 ll power(ll a, ll b){
     ll ans = 1;
     while(b){
-        if(b&1) ans=ans*a%MOD;
-        a=a*a%MOD;
+        if(b&1) ans=ans*a%Mod;
+        a=a*a%Mod;
         b/=2;
     }
     return ans;
@@ -76,38 +87,53 @@ void fast_io() {
     cout.tie(0);
 }
 
-int main(){
-    fast_io();
-    int t;
-    cin>>t;
-    while(t--){
-        int n;
-        cin>>n;
-        unordered_map<int,int>mp;
-        int neg=0;
-        for(int i=0;i<n;i++){
-            int x;
-            cin>>x;
-            if(x==-1){
-                neg++;
-            }else{
-                mp[x]++;
+pair<int,int>bfs(int st,vector<vector<int>>&adj){
+    int n=adj.size();
+
+    vector<int>dist(n,-1);
+    queue<int>q;
+
+    q.push(st);
+    dist[st]=0;
+
+    int farthest=st;
+    while(!q.empty()){
+        int u=q.front();
+        q.pop();
+
+        if(dist[u]>dist[farthest]){
+            farthest=u;
+        }
+        for(int v:adj[u]){
+            if(dist[v]==-1){
+                dist[v]=dist[u]+1;
+                q.push(v);
             }
         }
+    }
+    return {farthest,dist[farthest]};
+}
+int main(){
+    fast_io();
+    // int t;
+    // cin>>t;
+    // while(t--){
+        
+    // }   
+    int n;
+    cin>>n;
+    vector<vector<int>>adj(n);
+    for(int i=0;i<n-1;i++){
+        int u,v;
+        cin>>u>>v;
+        u--;v--;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
 
-        ll even=1;
-        int p=0;
-        for(auto &[val,freq]:mp){
-            even=(even* power(2,freq-1))%MOD;
-            if(mp.count(val-1)) p++;
-        }
-        ll ans=0;
-        ll negWays= power(2,neg-1) ;
-        if(negWays>1) ans=(negWays*p)%MOD;
-        ll ans=(ans+negWays)%MOD;
-        ans=(ans*p)%MOD;
+    auto [a,dl]=bfs(0,adj);
+    auto [b,diameter]=bfs(a,adj);
 
-        cout<<ans<<endl;
-    }   
+    cout<<3*diameter<<endl;
     
 }
