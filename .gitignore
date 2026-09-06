@@ -18,3 +18,4 @@
 *.exe
 /weird_sort.exe
 Revision*.cpp
+.cph
